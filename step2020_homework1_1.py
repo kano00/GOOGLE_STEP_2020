@@ -24,7 +24,8 @@ def get_anagram(random_word,dictionary):
     sorted_random_word=sorted(random_word)
     
     #新しい辞書の中を二分探索で探索して一致する単語を見つける
-    anagram=binary_search( sorted_random_word,new_dictionary)
+    anagram=binary_search( sorted_random_word,dictionary)
+
     return anagram
 
 
@@ -32,7 +33,7 @@ def get_anagram(random_word,dictionary):
 #以下が実行するコード
 if __name__ == '__main__':
 
-    random_word=input("input a string:")
+    random_word=input("Input a string:")
 
     #辞書の読み込み(大文字に統一)
     sorted_dictionary=[]
@@ -44,6 +45,10 @@ if __name__ == '__main__':
         
     #ソートする
     sorted_dictionary.sort()
-    anagram=get_anagram(random_word,sorted_dictionary
 
-    print("anagram is"+anagram)
+    #アナグラムを取得
+    anagram=get_anagram(random_word,sorted_dictionary)
+    if anagram==None:
+        print("No anagram")
+    else:
+        print("Anagram is "+anagram)
