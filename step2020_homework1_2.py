@@ -171,9 +171,10 @@ if __name__ == '__main__':
             random_word=get_random_word(driver)
             anagram,score=get_anagram_any_length(random_word,sorted_dictionary)
             
-            #一度でも１００点未満ならそのゲームはリタイア
-            if score<100:
+            #一度でも120 点未満ならそのゲームはリタイア
+            if score<120:
                 break
+
             total_score+=score
             
             #入力と次のトライアルへの移動
