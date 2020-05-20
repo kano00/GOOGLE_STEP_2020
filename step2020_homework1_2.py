@@ -54,7 +54,7 @@ def count_score(word):
             score+=3
         else :
             score+=2
-    score*=score
+    score=(score+1)**2
     return score
 
 
@@ -119,7 +119,7 @@ if __name__ == '__main__':
     
     #コマンドライン引数の定義
     parser = argparse.ArgumentParser(description='与えられた文字列に対してAnagramを返すプログラム')
-    parser.add_argument('-s','--score',type=int,help='目標得点',default=1900)
+    parser.add_argument('-s','--score',type=int,help='目標得点',default=1800)
     parser.add_argument('-i','--max_iter',type=int,help='最大試行回数',default=5)
     parser.add_argument('-m','--myname',type=str,help='名前',default='test')
     parser.add_argument('-e','--email',type=str,help='メールアドレス',default='')
@@ -134,7 +134,7 @@ if __name__ == '__main__':
     # 名前
     myname = args.myname
     #提出用のメールアドレス
-    args.max_iter
+    email=args.email
     #提出用のgithubのURL
     github_url=args.github_url
 
@@ -152,10 +152,11 @@ if __name__ == '__main__':
 
         #driverを使ってゲームページにアクセス
         driver = webdriver.Chrome()
-        driver.get('https://icanhazwordz.appspot.com/')
-        #カレントウインドウのサイズを幅:200,高さ:200に設定する
-        driver.set_window_size(200,200)
+        #カレントウインドウのサイズを高さ、幅:100,200に設定する
+        driver.set_window_size(100,200)
 
+        driver.get('https://icanhazwordz.appspot.com/')
+        
         total_score=0
         
         #10回トライアル
@@ -163,6 +164,11 @@ if __name__ == '__main__':
             
             random_word=get_random_word(driver)
             anagram,score=get_anagram_any_length(random_word,sorted_dictionary)
+            
+            #一度でも100点を下回ったらそのゲームはリタイア
+            if score<=100:
+                break
+
             total_score+=score
             
             #入力と次のトライアルへの移動
@@ -175,7 +181,8 @@ if __name__ == '__main__':
             print("Done")
             break
         else:
-            print("Failed")
+            print("Failed",game)
+            print("score:",total_score)
             driver.close()
     
 
