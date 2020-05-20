@@ -37,7 +37,13 @@ def get_anagram_any_length(random_word,dictionary):
         #どの文字も与えられた文字列に含まれているなら,その単語のスコアを求める
         if flag:
             score=count_score(dictionary_word[0])
-            if score>max_score:
+
+            #点数が現在の最高得点と同じでも長さが長い方に更新
+            if score==max_score and len(max_word)<len(dictionary_word[1]):
+                max_score=score
+                max_word=dictionary_word[1]
+            #点が今までの最高得点よりも高ければ更新
+            elif score>max_score:
                 max_score=score
                 max_word=dictionary_word[1]
             
@@ -145,15 +151,15 @@ if __name__ == '__main__':
             word=line.rstrip('\n').upper()
             sorted_dictionary.append((sorted(word.replace("QU","Q")),word))
         
-    sorted_dictionary.sort()
+    #sorted_dictionary.sort()
     
     #max_iter回ゲームをおこなう
     for game in range(max_iter):
 
         #driverを使ってゲームページにアクセス
         driver = webdriver.Chrome()
-        #カレントウインドウのサイズを高さ、幅:100,200に設定する
-        driver.set_window_size(100,200)
+        #カレントウインドウのサイズを高さ、幅:200,200に設定する
+        driver.set_window_size(200,200)
 
         driver.get('https://icanhazwordz.appspot.com/')
         
@@ -165,10 +171,9 @@ if __name__ == '__main__':
             random_word=get_random_word(driver)
             anagram,score=get_anagram_any_length(random_word,sorted_dictionary)
             
-            #一度でも100点を下回ったらそのゲームはリタイア
-            if score<=100:
+            #一度でも１００点未満ならそのゲームはリタイア
+            if score<100:
                 break
-
             total_score+=score
             
             #入力と次のトライアルへの移動
