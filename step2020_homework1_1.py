@@ -39,15 +39,15 @@ if __name__ == '__main__':
     sorted_dictionary=[]
     with open("./data/dictionary.words.txt","r") as f:
         for line in f:
-            word=line.rstrip('\n').lower()
+            word=line.rstrip('\n').upper()
             #辞書の単語を二次元配列にして保管
             sorted_dictionary.append((sorted(word),word))
         
-    #ソートする
+    #辞書全体をソートする
     sorted_dictionary.sort()
 
     #アナグラムを取得
-    anagram=get_anagram(random_word,sorted_dictionary)
+    anagram=get_anagram(random_word.upper(),sorted_dictionary)
     if anagram==None:
         print("No anagram")
     else:
