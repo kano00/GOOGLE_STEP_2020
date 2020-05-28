@@ -5,7 +5,7 @@ class Cache:
     def __init__(self, n):
         self.n = n
         self.data_dict = {"start": ["", "last"], "last": ["start", ""]}
-        self.hash_table =[""]*1_000_000_007
+        self.hash_table =[""]*10009
 
     # Access a page and update the cache so that it stores the most
     # recently accessed N pages. This needs to be done with mostly O(1).
@@ -29,7 +29,7 @@ class Cache:
         elif len(self.data_dict)-2>=self.n:
             # lastの左隣を書き換え
             new_last_url = self.data_dict[self.data_dict["last"][0]][0]
-            print(new_last_url)
+            
             #lastの左隣のURLはもう保存しなくて良いので消す
             del self.data_dict[self.data_dict["last"][0]]
             
@@ -48,7 +48,7 @@ class Cache:
         index=""
         for c in url:
             index+=str(ord(c))
-        index=int(index)%1_000_000_007
+        index=int(index)%10009
         if self.hash_table[index]=="":
             self.hash_table[index]=contents
         else:
