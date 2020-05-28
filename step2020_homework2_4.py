@@ -12,8 +12,19 @@ class Cache:
     # |url|: The accessed URL
     # |contents|: The contents of the URL
     
-    #'a.com','c.com','d.com'というような順番があるときに隣どうしの関係のみdictに保存して位置関係を維持する
-    #'start','a.com','c.com','d.com','last'というkeyをdata_dictは持ち、valueには[左のURL,右のURL]を入れる
+    """"
+    メインの関数
+    この関数ではdata_dictにurlの順番を入れて、ハッシュテーブルにcontentsをいれる。
+
+    返り値はなし：data_dictとhash_tableを更新することが目的
+    data_dict:辞書型
+    hash_table:配列型
+
+    例）'a.com','c.com','d.com'というような順番があるときに隣どうしの関係のみdictに保存して位置関係を維持する
+    data_dictには、'start','a.com','c.com','d.com','last'というkeyが入っていて、
+    valueには上の順で[左のURL,右のURL]が入っている状態になる。
+    hash_tableにはそれぞれのurlで各文字に対してasciiコードを使い数値化して、それの10009で割った余りをcontentsを格納する位置とする
+    """
     def access_page(self, url, contents):
         
         #もしすでにそのURLがdata_dictに存在するなら元の位置から消す
@@ -29,7 +40,7 @@ class Cache:
         elif len(self.data_dict)-2>=self.n:
             # lastの左隣を書き換え
             new_last_url = self.data_dict[self.data_dict["last"][0]][0]
-            
+
             #lastの左隣のURLはもう保存しなくて良いので消す
             del self.data_dict[self.data_dict["last"][0]]
             
@@ -45,6 +56,7 @@ class Cache:
 
         
         #ここからハッシュにコンテンツを加える処理
+        #ここの計算量がurlの文字数分かかってしまう
         index=""
         for c in url:
             index+=str(ord(c))
