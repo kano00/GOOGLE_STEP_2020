@@ -5,6 +5,7 @@ import os
 numbers=[]
 times=[]
 
+#collect data for relationship of N and time to calculate matrix product 
 for n in range(1,300,50):
     a = numpy.zeros((n, n)) # Matrix A
     b = numpy.zeros((n, n)) # Matrix B
@@ -19,6 +20,7 @@ for n in range(1,300,50):
     
     begin = time.time()
     
+    #calculate matrix product of a and b
     for i in range(n):
         for j in range(n):
             for k in range(n):
