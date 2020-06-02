@@ -54,9 +54,12 @@ def tokenize(line):
     tokens.append(token)
   return tokens
 
-# 字句の並びで乗算除算のみ計算して新しいtokensを返す関数
 
-
+"""
+字句の並びで乗算除算のみ計算して新しいtokensを返す関数
+引数：tokens　list型　ただしBracketRightやBracketLeftの無いtokens
+返り値：tokens　list型　TimesやDivisionのないtokensを返す
+"""
 def evaluateTimesDivision(tokens):
   index = 1
   while index < len(tokens):
@@ -82,7 +85,12 @@ def evaluateTimesDivision(tokens):
     index += 1
   return tokens
 
-# 字句の並びを計算する関数
+
+"""
+字句の並びを計算する関数
+引数：tokens　list型
+返り値：answer　float型　字句の並びの計算結果
+"""
 def evaluate(tokens):
   answer = 0
   tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
