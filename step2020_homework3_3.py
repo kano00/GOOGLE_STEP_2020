@@ -65,7 +65,11 @@ def tokenize(line):
     tokens.append(token)
   return tokens
 
-# 字句の並びで乗算除算のみ計算して新しいtokensを返す関数
+"""
+字句の並びで乗算除算のみ計算して新しいtokensを返す関数
+引数：tokens　list型　ただしBracketRightやBracketLeftの無いtokens
+返り値：tokens　list型　TimesやDivisionのないtokensを返す
+"""
 def evaluateTimesDivision(tokens):
   index = 1
   while index < len(tokens):
@@ -91,13 +95,18 @@ def evaluateTimesDivision(tokens):
     index += 1
   return tokens
 
-
-# 字句の並びで括弧内のみを計算して新しいtokensを返す関数
+"""
+字句の並びで括弧内のみを計算して新しいtokensを返す関数
+引数：tokens　list型
+返り値：tokens　list型　BracketRightやBracketLeftの無いtokensを返す
+"""
 def evaluateBrackets(tokens):
   index = 1
   while index < len(tokens):
+    #まず右括弧を探す
     if tokens[index]['type'] == 'BracketRight':
       right=index
+      #右括弧があれば左に向かって左括弧を探す
       while tokens[index]['type'] != 'BracketLeft':
           index-=1
           #左括弧がなければ計算を止める
@@ -105,6 +114,7 @@ def evaluateBrackets(tokens):
             print('Invalid syntax')
             exit(1)
 
+      #左括弧から右括弧までを計算する
       left=index
       number=evaluate(tokens[left+1:right])
       tokens[left]={'type': 'NUMBER', 'number': number}
@@ -118,7 +128,11 @@ def evaluateBrackets(tokens):
   return tokens
 
 
-# 字句の並びを計算する関数
+"""
+字句の並びを計算する関数
+引数：tokens　list型
+返り値：answer　float型　字句の並びの計算結果
+"""
 def evaluate(tokens):
   answer = 0
   tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
@@ -173,11 +187,10 @@ def runTest():
   test("2.0*(2.0+3.0)")
   test("2.0*(2.0*3.0)/3.0")
   test("2.0*(2.0*(1.0+2.0))/3.0")
-
-  test("(3.0+4*(2-1))/5")
+  test("2.0*(2.0*(1.0+2.0))-(2+3)*2")
 
   # 0除算
-  test("2/0+5")
+  #test("2/0+5")
 
   print("==== Test finished! ====\n")
 
