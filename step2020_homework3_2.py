@@ -23,9 +23,11 @@ def readMinus(line, index):
   token = {'type': 'MINUS'}
   return token, index + 1
 
+
 def readTimes(line, index):
   token = {'type': 'Times'}
   return token, index + 1
+
 
 def readDivision(line, index):
   token = {'type': 'Division'}
@@ -52,36 +54,44 @@ def tokenize(line):
     tokens.append(token)
   return tokens
 
+# 字句の並びで乗算除算のみ計算して新しいtokensを返す関数
 
+
+def evaluateTimesDivision(tokens):
+  index = 1
+  while index < len(tokens):
+    if tokens[index]['type'] == 'NUMBER':
+      if tokens[index - 1]['type'] == 'Times':
+        # 乗算記号の前の数字を計算結果で書き換える
+        tokens[index - 2]['number'] *= tokens[index]['number']
+        # 乗算記号と乗算記号の後ろの数字をtokensから消す
+        del tokens[index-1:index+1]
+        index -= 2
+
+      elif tokens[index - 1]['type'] == 'Division':
+        # 0除算があれば計算を止める
+        if tokens[index]['number'] == 0:
+            print("Don't divide number by 0")
+            exit(1)
+
+        tokens[index - 2]['number'] /= tokens[index]['number']
+        del tokens[index-1:index+1]
+        index -= 2
+      else:
+        pass
+    index += 1
+  return tokens
+
+# 字句の並びを計算する関数
 def evaluate(tokens):
   answer = 0
   tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
 
-  index = 1
-  #乗算除算のみを行う
-  while index < len(tokens):
-    if tokens[index]['type'] == 'NUMBER':
-      if tokens[index - 1]['type'] == 'Times':
-        #乗算記号の前の数字を計算結果で書き換える
-        tokens[index - 2]['number']*=tokens[index]['number']
-        #乗算記号と乗算記号の後ろの数字をtokensから消す
-        del tokens[index-1:index+1]
-        index-=2
-
-      elif tokens[index - 1]['type'] == 'Division':
-        #0除算があれば計算を止める
-        if tokens[index]['number']==0:
-            print("Don't divide number by 0")
-            exit(1)
-
-        tokens[index - 2]['number']/=tokens[index]['number']
-        del tokens[index-1:index+1]
-        index-=2
-      else:
-        pass
-    index += 1
   
-  #加算減算のみを行う
+  # 乗算除算のみを行う
+  tokens=evaluateTimesDivision(tokens)
+  
+  # 字句の並びを計算する
   index = 1
   while index < len(tokens):
     if tokens[index]['type'] == 'NUMBER':
@@ -109,12 +119,12 @@ def test(line):
 # Add more tests to this function :)
 def runTest():
   print("==== Test started! ====")
-  #加算減算
+  # 加算減算
   test("1+2")
   test("1.0+2")
   test("1.0+2.1")
   test("1.0+2.1-3")
-  #乗算除算
+  # 乗算除算
   test("1*2")
   test("1.0*2")
   test("1.0*2.1")
@@ -123,7 +133,7 @@ def runTest():
   test("3+4.0/2")
   test("3-2.0/3")
 
-  #0除算
+  # 0除算
   test("2/0+5")
 
   print("==== Test finished! ====\n")

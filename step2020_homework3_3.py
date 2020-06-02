@@ -33,6 +33,13 @@ def readDivision(line, index):
   token = {'type': 'Division'}
   return token, index + 1
 
+def readBracketLeft(line, index):
+  token = {'type': 'BracketLeft'}
+  return token, index + 1
+
+def readBracketRight(line, index):
+  token = {'type': 'BracketRight'}
+  return token, index + 1
 
 def tokenize(line):
   tokens = []
@@ -48,6 +55,10 @@ def tokenize(line):
       (token, index) = readTimes(line, index)
     elif line[index] == '/':
       (token, index) = readDivision(line, index)
+    elif line[index] == '(':
+      (token, index) = readBracketLeft(line, index)
+    elif line[index] == ')':
+      (token, index) = readBracketRight(line, index)
     else:
       print('Invalid character found: ' + line[index])
       exit(1)
@@ -55,8 +66,6 @@ def tokenize(line):
   return tokens
 
 # 字句の並びで乗算除算のみ計算して新しいtokensを返す関数
-
-
 def evaluateTimesDivision(tokens):
   index = 1
   while index < len(tokens):
@@ -82,16 +91,45 @@ def evaluateTimesDivision(tokens):
     index += 1
   return tokens
 
+
+# 字句の並びで括弧内のみを計算して新しいtokensを返す関数
+def evaluateBrackets(tokens):
+  index = 1
+  while index < len(tokens):
+    if tokens[index]['type'] == 'BracketRight':
+      right=index
+      while tokens[index]['type'] != 'BracketLeft':
+          index-=1
+          #左括弧がなければ計算を止める
+          if index >= len(tokens):
+            print('Invalid syntax')
+            exit(1)
+
+      left=index
+      number=evaluate(tokens[left+1:right])
+      tokens[left]={'type': 'NUMBER', 'number': number}
+
+      # ()と括弧内の数字をtokensから消す
+      del tokens[left+1:right+1]
+
+    else:
+      pass
+    index += 1
+  return tokens
+
+
 # 字句の並びを計算する関数
 def evaluate(tokens):
   answer = 0
   tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
 
-  
+  #括弧内の計算を行う
+  tokens=evaluateBrackets(tokens)
+
   # 乗算除算のみを行う
   tokens=evaluateTimesDivision(tokens)
   
-  # 字句の並びを計算する
+  # 字句の並びを計算する（メインの計算）
   index = 1
   while index < len(tokens):
     if tokens[index]['type'] == 'NUMBER':
@@ -119,8 +157,28 @@ def test(line):
 # Add more tests to this function :)
 def runTest():
   print("==== Test started! ====")
+  # 加算減算
   test("1+2")
-  test("1.0+2.1-3")
+  test("1.0+2.1")
+  test("1.0+2.1-3.0")
+  # 乗算除算
+  test("1*2")
+  test("1.0*2.1")
+  test("0*2.0")
+  test("3.0-1.0*2.1")
+  test("3.0+4.0/2.0")
+
+  # 括弧内計算
+  test("2*(2+3)")
+  test("2.0*(2.0+3.0)")
+  test("2.0*(2.0*3.0)/3.0")
+  test("2.0*(2.0*(1.0+2.0))/3.0")
+
+  test("(3.0+4*(2-1))/5")
+
+  # 0除算
+  test("2/0+5")
+
   print("==== Test finished! ====\n")
 
 runTest()
