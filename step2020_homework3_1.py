@@ -57,7 +57,7 @@ def tokenize(line):
 
 """
 字句の並びで乗算除算のみ計算して新しいtokensを返す関数
-引数：tokens　list型　ただしBracketRightやBracketLeftの無いtokens
+引数：tokens　list型
 返り値：tokens　list型　TimesやDivisionのないtokensを返す
 """
 def evaluateTimesDivision(tokens):
