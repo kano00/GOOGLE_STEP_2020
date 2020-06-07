@@ -25,10 +25,10 @@ with open(file_name,"r", encoding="utf-8-sig") as f:
         edges.append([int(start),int(goal)])
 
 
-#グラフ作成
+#１本の矢印でつながっているidを記録する配列を作成
 Gragh=[[] for _ in range(len(nicknames))]
 
-#Gragh[id]
+#矢印の起点idと一致するindexに矢印の終点のidを記録する
 for edge in edges:
     Gragh[edge[0]].append(edge[1])
 
